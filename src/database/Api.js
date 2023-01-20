@@ -58,3 +58,76 @@ export function getReloads() {
     }
   })
 }
+
+export function getAuctions() {
+  const states = [
+    { id: 0, name: 'En Cours' },
+    { id: 1, name: 'Terminée' },
+  ]
+  const userIds = _.shuffle([...Array(30).keys()])
+  return _.times(30, (index) => {
+    return {
+      id: index,
+      user: {
+        id: userIds[index],
+        username: faker.internet.userName(faker.name.firstName(), faker.name.lastName()),
+      },
+      startDate: format(faker.date.past(), 'dd MMMM yyyy', { locale: fr }),
+      endDate: format(faker.date.future(), 'dd MMMM yyyy', { locale: fr }),
+      startPrice: faker.finance.amount(100000, null, 2),
+      topBid: faker.finance.amount(100000, null, 2),
+      state: states[_.random(0, 1)],
+      title: faker.commerce.product(),
+    }
+  })
+}
+
+export function getAuction(id) {
+  const states = [
+    { id: 0, name: 'En Cours' },
+    { id: 1, name: 'Terminée' },
+  ]
+  return {
+    id: id,
+    user: {
+      id: _.random(0, 29),
+      username: faker.internet.userName(faker.name.firstName(), faker.name.lastName()),
+    },
+    rawStartDate: faker.date.past(),
+    startDate: format(faker.date.past(), 'dd MMMM yyyy', { locale: fr }),
+    rawEndDate: faker.date.future(),
+    endDate: format(faker.date.future(), 'dd MMMM yyyy', { locale: fr }),
+    startPrice: faker.finance.amount(100000, null, 2),
+    topBid: faker.finance.amount(100000, null, 2),
+    state: states[_.random(0, 1)],
+    title: faker.commerce.product(),
+    description: faker.lorem.paragraphs(3),
+    category: {
+      id: _.random(0, 4),
+      name: faker.commerce.department(),
+    },
+    pictures: _.times(_.random(3, 5), (index) => faker.image.food(null, null, true)),
+    bids: _.times(10, (index) => {
+      const rawDate = faker.date.past()
+      return {
+        id: index,
+        user: {
+          id: _.random(0, 29),
+          username: faker.internet.userName(faker.name.firstName(), faker.name.lastName()),
+        },
+        amount: faker.finance.amount(100000, null, 2),
+        rawDate: rawDate,
+        date: format(rawDate, 'dd MMMM yyyy', { locale: fr }),
+      }
+    }),
+  }
+}
+
+export function getCategories() {
+  return _.times(5, (index) => {
+    return {
+      id: index,
+      name: faker.commerce.department(),
+    }
+  })
+}

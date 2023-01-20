@@ -53,6 +53,11 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 // Pages
 const Statistics = React.lazy(() => import('./views/pages/statistics/Statistics'))
 const Reloads = React.lazy(() => import('./views/pages/reloads/Reloads'))
+const AuctionList = React.lazy(() => import('./views/pages/auctions/List/AuctionList'))
+const AuctionDetails = React.lazy(() => import('./views/pages/auctions/Details/AuctionDetails'))
+const AuctionModificationForm = React.lazy(() =>
+  import('./views/pages/auctions/ModificationForm/AuctionModificationForm'),
+)
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -101,6 +106,9 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: '/statistics', name: 'Statistics', element: Statistics },
   { path: '/reloads', name: 'Reloads', element: Reloads },
+  { path: '/auctions', name: 'Auctions', element: AuctionList },
+  { path: '/auctions/:id', name: 'Auction', element: AuctionDetails },
+  { path: '/auctions/:id/modify', name: 'Modify Auction', element: AuctionModificationForm },
 ]
 
 export default routes
