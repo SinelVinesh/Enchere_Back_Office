@@ -4,14 +4,14 @@ import { CButton, CCard, CCardBody, CCol, CFormInput, CRow } from '@coreui/react
 import DataTable from 'react-data-table-component'
 import PropTypes from 'prop-types'
 
-const List = (props) => {
-  const [filteredData, setFiltered] = useState(props.data)
+const List = ({ data, columns, title, selectable, linkFunction }) => {
+  const [filteredData, setFiltered] = useState(data)
   const navigate = useNavigate()
   const filterBar = React.useMemo(() => {
     const filterData = (text) => {
-      const filtered = props.data.filter((entry) => {
+      const filtered = data.filter((entry) => {
         if (text === '') return true
-        for (const column of props.columns) {
+        for (const column of columns) {
           const target = column.selector(entry).toString()
           if (target.match(new RegExp(text, 'i')) !== null) {
             return true
@@ -38,16 +38,16 @@ const List = (props) => {
         <CCardBody>
           <CRow>
             <DataTable
-              title={props.title}
-              columns={props.columns}
+              title={title}
+              columns={columns}
               data={filteredData}
-              selectableRows={props.selectable}
+              selectableRows={selectable}
               pagination
               subHeader
               subHeaderComponent={filterBar}
-              className={props.linkBase ? 'clickable' : ''}
+              className={linkFunction ? 'clickable' : ''}
               onRowClicked={(row) => {
-                if (props.linkBase) navigate(`/${props.linkBase}/${row[props.linkId]}`)
+                if (linkFunction) navigate(linkFunction(row))
               }}
             />
           </CRow>
@@ -62,7 +62,6 @@ List.propTypes = {
   columns: PropTypes.array,
   data: PropTypes.array,
   selectable: PropTypes.bool,
-  linkBase: PropTypes.string,
-  linkId: PropTypes.string,
+  linkFunction: PropTypes.func,
 }
 export default List

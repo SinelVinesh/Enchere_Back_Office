@@ -17,32 +17,6 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { Category, Dashboard, Gavel, Settings } from '@mui/icons-material'
 
 const _nav = [
-  // {
-  //   component: CNavGroup,
-  //   name: 'Icons',
-  //   icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-  //   items: [
-  //     {
-  //       component: CNavItem,
-  //       name: 'CoreUI Free',
-  //       to: '/icons/coreui-icons',
-  //       badge: {
-  //         color: 'success',
-  //         text: 'NEW',
-  //       },
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'CoreUI Flags',
-  //       to: '/icons/flags',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'CoreUI Brands',
-  //       to: '/icons/brands',
-  //     },
-  //   ],
-  // },
   {
     component: CNavItem,
     name: 'Dashboard',
@@ -56,10 +30,21 @@ const _nav = [
     icon: <Gavel className={'nav-icon'} />,
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Catégories',
-    to: '/categories',
     icon: <Category className={'nav-icon'} />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Liste des catégories',
+        to: '/categories',
+      },
+      {
+        component: CNavItem,
+        name: 'Ajouter une catégorie',
+        to: '/categories/new',
+      },
+    ],
   },
   {
     component: CNavItem,

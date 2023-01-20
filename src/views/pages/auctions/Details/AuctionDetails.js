@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { getAuction } from '../../../../database/Api'
-import Details from '../../generic/Details'
+import Details from '../../../../components/generic/Details'
 import { isBefore } from 'date-fns'
 
 const AuctionDetails = () => {

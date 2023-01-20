@@ -14,7 +14,18 @@ import {
 } from '@coreui/react'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import EditableGallery from './EditableGallery'
-const ModificationForm = ({ data, properties, submit }) => {
+import SearchableDatatable from './SearchableDatatable'
+import DataTable from 'react-data-table-component'
+const Form = ({
+  data,
+  properties,
+  submit,
+  multiple,
+  multipleData,
+  add,
+  multipleSelectionHandler,
+  contextActions,
+}) => {
   const basicInputs = [
     'text',
     'number',
@@ -26,6 +37,16 @@ const ModificationForm = ({ data, properties, submit }) => {
     'month',
     'week',
   ]
+  let columns = []
+  if (multiple) {
+    columns = properties.map((property) => {
+      return {
+        name: property.label,
+        selector: property.selector,
+        sortable: true,
+      }
+    })
+  }
   return (
     <CCard>
       <CCardBody>
@@ -90,19 +111,40 @@ const ModificationForm = ({ data, properties, submit }) => {
         ))}
         <CRow>
           <CCol sm={12}>
-            <CButton color={'primary'} onClick={submit}>
-              Enregistrer
+            <CButton color={'primary'} onClick={multiple ? add : submit}>
+              {multiple ? 'Ajouter' : 'Enregistrer'}
             </CButton>
           </CCol>
         </CRow>
+        {multiple && (
+          <>
+            <SearchableDatatable
+              title={'Catégories à enregistrer'}
+              data={multipleData}
+              columns={columns}
+              selectable
+              handleRowSelection={multipleSelectionHandler}
+              contextActions={contextActions}
+            />
+            <CButton color={'primary'} onClick={submit}>
+              Enregistrer
+            </CButton>
+          </>
+        )}
       </CCardBody>
     </CCard>
   )
 }
-ModificationForm.propTypes = {
+Form.propTypes = {
   data: PropTypes.object,
   properties: PropTypes.array,
   submit: PropTypes.func,
+  add: PropTypes.func,
+  delete: PropTypes.func,
+  multiple: PropTypes.bool,
+  multipleData: PropTypes.array,
+  multipleSelectionHandler: PropTypes.func,
+  contextActions: PropTypes.object,
 }
 
-export default ModificationForm
+export default Form

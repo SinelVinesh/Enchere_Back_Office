@@ -131,3 +131,10 @@ export function getCategories() {
     }
   })
 }
+
+export function getCategory(id) {
+  return {
+    id: _.random(0, 4),
+    name: faker.commerce.department(),
+  }
+}
