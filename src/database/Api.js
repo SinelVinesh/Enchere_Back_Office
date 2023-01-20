@@ -131,3 +131,39 @@ export function getCategories() {
     }
   })
 }
+
+export function getCategory(id) {
+  return {
+    id: _.random(0, 4),
+    name: faker.commerce.department(),
+  }
+}
+
+export function getSettings() {
+  return _.times(5, (index) => {
+    return {
+      id: index,
+      name: faker.name.jobTitle(),
+      value: faker.random.alphaNumeric(_.random(10, 50)),
+    }
+  })
+}
+
+export function getSetting(id) {
+  return {
+    id: _.random(0, 4),
+    name: faker.name.jobTitle(),
+    value: faker.random.alphaNumeric(_.random(10, 50)),
+    valueHistory: _.times(10, (index) => {
+      return {
+        id: index,
+        value: faker.random.alphaNumeric(_.random(10, 50)),
+        date: faker.date.past(),
+        admin: {
+          id: index,
+          username: faker.internet.userName(),
+        },
+      }
+    }),
+  }
+}

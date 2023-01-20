@@ -1,5 +1,5 @@
 import React from 'react'
-import List from '../../generic/List'
+import List from '../../../../components/generic/List'
 import { getAuctions } from '../../../../database/Api'
 
 const AuctionList = () => {
@@ -48,8 +48,7 @@ const AuctionList = () => {
       columns={columns}
       selectable={false}
       data={auctions}
-      linkBase={'auctions'}
-      linkId={'id'}
+      linkFunction={(row) => `/auctions/${row.id}`}
     />
   )
 }

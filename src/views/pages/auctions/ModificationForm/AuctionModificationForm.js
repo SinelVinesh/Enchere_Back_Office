@@ -1,5 +1,5 @@
 import React from 'react'
-import ModificationForm from '../../generic/ModificationForm'
+import Form from '../../../../components/generic/Form'
 import { useParams } from 'react-router-dom'
 import { getAuction, getCategories } from '../../../../database/Api'
 import { format } from 'date-fns'
@@ -84,7 +84,7 @@ const AuctionModificationForm = () => {
   const submit = () => {
     console.log(auction)
   }
-  return <ModificationForm data={auction} properties={properties} submit={submit} />
+  return <Form data={auction} properties={properties} submit={submit} />
 }
 
 export default AuctionModificationForm

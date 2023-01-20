@@ -1,48 +1,8 @@
 import React from 'react'
-import CIcon from '@coreui/icons-react'
-import {
-  cilBell,
-  cilCalculator,
-  cilChartPie,
-  cilCursor,
-  cilDescription,
-  cilDrop,
-  cilNotes,
-  cilPencil,
-  cilPuzzle,
-  cilSpeedometer,
-  cilStar,
-} from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-import { Category, Dashboard, Gavel, Settings } from '@mui/icons-material'
+import { Category, Dashboard, Gavel, Money, Settings } from '@mui/icons-material'
 
 const _nav = [
-  // {
-  //   component: CNavGroup,
-  //   name: 'Icons',
-  //   icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-  //   items: [
-  //     {
-  //       component: CNavItem,
-  //       name: 'CoreUI Free',
-  //       to: '/icons/coreui-icons',
-  //       badge: {
-  //         color: 'success',
-  //         text: 'NEW',
-  //       },
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'CoreUI Flags',
-  //       to: '/icons/flags',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'CoreUI Brands',
-  //       to: '/icons/brands',
-  //     },
-  //   ],
-  // },
   {
     component: CNavItem,
     name: 'Dashboard',
@@ -57,15 +17,43 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Catégories',
-    to: '/categories',
-    icon: <Category className={'nav-icon'} />,
+    name: 'Rechargements',
+    to: '/reloads',
+    icon: <Money className={'nav-icon'} />,
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
+    name: 'Catégories',
+    icon: <Category className={'nav-icon'} />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Liste des catégories',
+        to: '/categories',
+      },
+      {
+        component: CNavItem,
+        name: 'Ajouter une catégorie',
+        to: '/categories/new',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
     name: 'Paramètres',
-    to: '/settings',
     icon: <Settings className={'nav-icon'} />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Liste des paramètres',
+        to: '/settings',
+      },
+      {
+        component: CNavItem,
+        name: 'Ajouter un paramètre',
+        to: '/settings/new',
+      },
+    ],
   },
 ]
 

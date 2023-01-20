@@ -13,16 +13,16 @@ import PropTypes from 'prop-types'
 import SearchableDatatable from './SearchableDatatable'
 import { useNavigate } from 'react-router-dom'
 
-const Details = (props) => {
+const Details = ({ title, properties, data }) => {
   const navigate = useNavigate()
   return (
     <>
       <CCard>
         <CCardBody>
           <CRow>
-            <h4 className="card-title">{props.title}</h4>
+            <h4 className="card-title">{title}</h4>
           </CRow>
-          {props.properties.map((property) => (
+          {properties.map((property) => (
             <>
               <CRow key={property.label}>
                 <CCol sm={12}>
@@ -33,8 +33,8 @@ const Details = (props) => {
                     <CRow>
                       <CCol sm={{ span: 6, offset: 3 }}>
                         <CCarousel controls indicators>
-                          {Array.isArray(property.selector(props.data)) &&
-                            property.selector(props.data).map((image, index) => (
+                          {Array.isArray(property.selector(data)) &&
+                            property.selector(data).map((image, index) => (
                               <CCarouselItem key={image}>
                                 <CImage className={'d-block w-100 h-50'} src={image} alt={index} />
                               </CCarouselItem>
@@ -45,10 +45,13 @@ const Details = (props) => {
                   )}
                   {property.type === 'table' && (
                     <CRow>
-                      <SearchableDatatable data={props.data.bids} columns={property.columns} />
+                      <SearchableDatatable
+                        data={property.selector(data)}
+                        columns={property.columns}
+                      />
                     </CRow>
                   )}
-                  {property.type === 'text' && property.selector(props.data)}
+                  {property.type === 'text' && property.selector(data)}
                 </CCol>
               </CRow>
             </>

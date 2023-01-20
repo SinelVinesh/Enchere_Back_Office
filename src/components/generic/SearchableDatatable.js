@@ -1,9 +1,18 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { CCol, CFormInput } from '@coreui/react'
+import { CCol, CFormInput, CRow } from '@coreui/react'
 import DataTable from 'react-data-table-component'
 import { useNavigate } from 'react-router-dom'
-const SearchableDatatable = ({ data, columns, title, selectable, linkBase, linkId }) => {
+const SearchableDatatable = ({
+  data,
+  columns,
+  title,
+  selectable,
+  linkBase,
+  linkId,
+  handleRowSelection,
+  contextActions,
+}) => {
   const [filteredData, setFiltered] = useState(data)
   const filterBar = React.useMemo(() => {
     const filterData = (text) => {
@@ -33,19 +42,23 @@ const SearchableDatatable = ({ data, columns, title, selectable, linkBase, linkI
   }, [])
   const navigate = useNavigate()
   return (
-    <DataTable
-      title={title}
-      columns={columns}
-      data={filteredData}
-      selectableRows={selectable}
-      pagination
-      subHeader
-      subHeaderComponent={filterBar}
-      className={linkBase ? 'clickable' : ''}
-      onRowClicked={(row) => {
-        if (linkBase) navigate(`/${linkBase}/${row[linkId]}`)
-      }}
-    />
+    <CRow>
+      <DataTable
+        title={title}
+        columns={columns}
+        data={filteredData}
+        selectableRows={selectable}
+        onSelectedRowsChange={handleRowSelection}
+        pagination
+        subHeader
+        contextActions={contextActions}
+        subHeaderComponent={filterBar}
+        className={linkBase ? 'clickable' : ''}
+        onRowClicked={(row) => {
+          if (linkBase) navigate(`/${linkBase}/${row[linkId]}`)
+        }}
+      />
+    </CRow>
   )
 }
 
@@ -56,6 +69,8 @@ SearchableDatatable.propTypes = {
   selectable: PropTypes.bool,
   linkBase: PropTypes.string,
   linkId: PropTypes.string,
+  handleRowSelection: PropTypes.func,
+  contextActions: PropTypes.object,
 }
 
 export default SearchableDatatable
