@@ -1,11 +1,14 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import { getSetting } from '../../../../database/Api'
+import React, { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getSetting, updateSetting } from '../../../../database/Api'
 import Form from '../../../../components/generic/Form'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
 
 const SettingModificationForm = () => {
   const { id } = useParams()
-  const setting = getSetting(id)
+  const [setting, setSetting] = React.useState(undefined)
+  const navigate = useNavigate()
   const properties = [
     {
       label: 'ID',
@@ -17,13 +20,53 @@ const SettingModificationForm = () => {
       label: 'Désignation',
       name: 'name',
       type: 'text',
-      selector: (setting) => setting.name,
-      change: (e) => (setting.name = e.target.value),
+      selector: (setting) => setting.key,
+      change: (e) => (setting.key = e.target.value),
+    },
+    {
+      label: 'Valeur',
+      name: 'value',
+      type: 'text',
+      selector: (setting) => setting.currentValue.value,
+      change: (e) => (setting.currentValue.value = e.target.value),
     },
   ]
   const submit = () => {
-    console.log(setting)
+    const swal = withReactContent(Swal)
+    const data = {
+      id: setting.id,
+      key: setting.key,
+      currentValue: {
+        value: setting.currentValue.value,
+      },
+    }
+    updateSetting(id, data)
+      .then(() => {
+        swal
+          .fire({
+            icon: 'success',
+            title: 'Le paramètre a été modifié avec succes',
+            timer: 2000,
+            showConfirmButton: false,
+          })
+          .then(() => {
+            navigate(-1)
+          })
+      })
+      .catch((error) => {
+        const swalData = {
+          icon: 'error',
+          title: 'Une erreur est survenue lors de la modification du paramètre',
+          text: error.response.data.message,
+        }
+        swal.fire(swalData).then()
+      })
   }
-  return <Form data={setting} properties={properties} submit={submit} />
+  useEffect(() => {
+    getSetting(id).then((data) => {
+      setSetting(data)
+    })
+  }, [id])
+  return <> {setting && <Form data={setting} properties={properties} submit={submit} />} </>
 }
 export default SettingModificationForm

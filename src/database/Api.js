@@ -17,6 +17,9 @@ const categoryUrl = (id) => `${categoriesUrl}/${id}`
 // reloads
 const reloadsUrl = `${host}/reloads`
 const reloadValidationUrl = `${reloadsUrl}/validations`
+// settings
+const settingsUrl = `${host}/settings`
+const settingUrl = (id) => `${settingsUrl}/${id}`
 
 /* api calls */
 // Generic
@@ -81,6 +84,22 @@ export function validateReloads(reload) {
   return postCall(reloadValidationUrl, reload)
 }
 
+// Settings
+export function getSettings() {
+  return getCall(settingsUrl)
+}
+export function getSetting(id) {
+  return getCall(settingUrl(id))
+}
+
+export function updateSetting(id, data) {
+  return putCall(settingUrl(id), data)
+}
+
+export function addSetting(category) {
+  return postCall(settingsUrl, category)
+}
+
 export function getSalesStats() {
   return {
     dailySales: [
@@ -114,34 +133,5 @@ export function getAuctionsStats() {
     totalAuctions: 3206,
     leastValuable: 45000,
     mostValuable: 2750000,
-  }
-}
-
-export function getSettings() {
-  return _.times(5, (index) => {
-    return {
-      id: index,
-      name: faker.name.jobTitle(),
-      value: faker.random.alphaNumeric(_.random(10, 50)),
-    }
-  })
-}
-
-export function getSetting(id) {
-  return {
-    id: _.random(0, 4),
-    name: faker.name.jobTitle(),
-    value: faker.random.alphaNumeric(_.random(10, 50)),
-    valueHistory: _.times(10, (index) => {
-      return {
-        id: index,
-        value: faker.random.alphaNumeric(_.random(10, 50)),
-        date: faker.date.past(),
-        admin: {
-          id: index,
-          username: faker.internet.userName(),
-        },
-      }
-    }),
   }
 }

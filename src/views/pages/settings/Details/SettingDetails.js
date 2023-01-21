@@ -1,15 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { getSetting } from '../../../../database/Api'
 import Details from '../../../../components/generic/Details'
-import { format, isBefore } from 'date-fns'
+import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 const SettingDetails = () => {
   const { id } = useParams()
-  const setting = getSetting(id)
-  setting.valueHistory = setting.valueHistory.sort((a, b) => (isBefore(a.date, b.date) ? 1 : -1))
-
+  const [setting, setSetting] = React.useState(undefined)
   const columns = [
     {
       name: 'ID',
@@ -20,26 +18,38 @@ const SettingDetails = () => {
       selector: (row) => row.value,
     },
     {
-      name: 'Administrateur',
-      selector: (row) => row.admin.username,
-    },
-    {
       name: 'Date de modification',
-      selector: (row) => format(row.date, 'dd MMMM yyyy', { locale: fr }),
+      selector: (row) => format(new Date(row.date), 'dd MMMM yyyy à HH:mm', { locale: fr }),
     },
   ]
   const properties = [
     { selector: (setting) => setting.id, label: 'ID', type: 'text' },
-    { selector: (setting) => setting.name, label: 'Désignation', type: 'text' },
-    { selector: (setting) => setting.value, label: 'Valeur actuelle', type: 'text' },
+    { selector: (setting) => setting.key, label: 'Désignation', type: 'text' },
+    { selector: (setting) => setting.currentValue.value, label: 'Valeur actuelle', type: 'text' },
     {
-      selector: (setting) => setting.valueHistory,
+      selector: (setting) => format(new Date(setting.creationDate), 'dd MM yyyy', { locale: fr }),
+      label: 'Date de création',
+      type: 'text',
+    },
+    {
+      selector: (setting) => setting.history,
       label: 'Historiques des valeurs',
       type: 'table',
       columns: columns,
     },
   ]
-  return <Details title={`Détail de ${setting.name}`} data={setting} properties={properties} />
+  useEffect(() => {
+    getSetting(id).then((data) => {
+      setSetting(data)
+    })
+  }, [id])
+  return (
+    <>
+      {setting && (
+        <Details title={`Détail de ${setting.name}`} data={setting} properties={properties} />
+      )}{' '}
+    </>
+  )
 }
 
 export default SettingDetails
