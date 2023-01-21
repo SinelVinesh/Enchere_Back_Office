@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { getCategories } from '../../../../database/Api'
 import List from '../../../../components/generic/List'
 const CategoryList = () => {
-  const categories = getCategories()
+  const [categories, setCategories] = useState([])
   const columns = [
     {
       name: 'ID',
@@ -15,6 +15,11 @@ const CategoryList = () => {
       sortable: true,
     },
   ]
+  useEffect(() => {
+    getCategories().then((data) => {
+      setCategories(data)
+    })
+  }, [])
   return (
     <List
       title={'Liste des catégories'}

@@ -101,27 +101,28 @@ const AuctionModificationForm = () => {
       startingPrice: auction.startingPrice,
       bidStep: auction.bidStep,
     }
-    updateAuction(id, body).then(() => {
-      const swal = withReactContent(Swal)
-      swal
-        .fire({
-          icon: 'success',
-          title: "L'enchère a été modifié avec succes",
-          timer: 2000,
-          showConfirmButton: false,
-        })
-        .then(() => {
-          navigate(-1)
-        })
-        .catch((error) => {
-          const swalData = {
-            icon: 'error',
-            title: "Une erreur est survenue lors de l'enregistrement",
-            text: error.response.data.message,
-          }
-          swal.fire(swalData).then()
-        })
-    })
+    const swal = withReactContent(Swal)
+    updateAuction(id, body)
+      .then(() => {
+        swal
+          .fire({
+            icon: 'success',
+            title: "L'enchère a été modifiée avec succes",
+            timer: 2000,
+            showConfirmButton: false,
+          })
+          .then(() => {
+            navigate(-1)
+          })
+      })
+      .catch((error) => {
+        const swalData = {
+          icon: 'error',
+          title: "Une erreur est survenue lors de l'enregistrement",
+          text: error.response.data.message,
+        }
+        swal.fire(swalData).then()
+      })
   }
   useEffect(() => {
     getCategories().then((data) => {

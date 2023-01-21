@@ -13,7 +13,7 @@ import PropTypes from 'prop-types'
 import SearchableDatatable from './SearchableDatatable'
 import { useNavigate } from 'react-router-dom'
 
-const Details = ({ title, properties, data }) => {
+const Details = ({ title, properties, data, deletable }) => {
   const navigate = useNavigate()
   return (
     <>
@@ -61,7 +61,7 @@ const Details = ({ title, properties, data }) => {
               <CButton color={'primary'} onClick={() => navigate('modify')}>
                 Modifier
               </CButton>
-              <CButton color={'warning'}>Supprimer</CButton>
+              {deletable && <CButton color={'warning'}>Supprimer</CButton>}
             </CCol>
           </CRow>
         </CCardBody>
@@ -74,6 +74,7 @@ Details.propTypes = {
   title: PropTypes.string,
   properties: PropTypes.array,
   data: PropTypes.object,
+  deletable: PropTypes.bool,
 }
 
 export default Details

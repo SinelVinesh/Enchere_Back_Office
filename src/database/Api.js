@@ -61,6 +61,17 @@ export function updateAuction(id, data) {
 export function getCategories() {
   return getCall(categoriesUrl)
 }
+export function getCategory(id) {
+  return getCall(categoryUrl(id))
+}
+
+export function updateCategory(id, data) {
+  return putCall(categoryUrl(id), data)
+}
+
+export function addCategory(category) {
+  return postCall(categoriesUrl, category)
+}
 
 // Reloads
 export function getReloads() {
@@ -103,13 +114,6 @@ export function getAuctionsStats() {
     totalAuctions: 3206,
     leastValuable: 45000,
     mostValuable: 2750000,
-  }
-}
-
-export function getCategory(id) {
-  return {
-    id: _.random(0, 4),
-    name: faker.commerce.department(),
   }
 }
 
