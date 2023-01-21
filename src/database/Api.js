@@ -2,6 +2,74 @@ import { faker } from '@faker-js/faker'
 import _ from 'lodash'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import axios from 'axios'
+
+/* urls */
+const host = 'http://localhost:8080'
+// auth
+const loginUrl = `${host}/admin/login`
+// auctions
+const auctionsUrl = `${host}/auctions`
+const auctionUrl = (id) => `${auctionsUrl}/${id}`
+// categories
+const categoriesUrl = `${host}/categories`
+const categoryUrl = (id) => `${categoriesUrl}/${id}`
+// reloads
+const reloadsUrl = `${host}/reloads`
+const reloadValidationUrl = `${reloadsUrl}/validations`
+
+/* api calls */
+// Generic
+export const getCall = (url) => {
+  return axios
+    .get(url)
+    .then((res) => (res.status === 200 ? res : Promise.reject(res)))
+    .then((res) => res.data.data)
+}
+
+export const postCall = (url, data) => {
+  return axios
+    .post(url, data)
+    .then((res) => (res.status === 200 ? res : Promise.reject(res)))
+    .then((res) => res.data.data)
+}
+
+export const putCall = (url, data) => {
+  return axios
+    .put(url, data)
+    .then((res) => (res.status === 200 ? res : Promise.reject(res)))
+    .then((res) => res.data.data)
+}
+
+// Authentication
+export const login = (user) => {
+  return postCall(loginUrl, user)
+}
+
+// Auctions
+export function getAuctions() {
+  return getCall(auctionsUrl)
+}
+export function getAuction(id) {
+  return getCall(auctionUrl(id))
+}
+export function updateAuction(id, data) {
+  return putCall(auctionUrl(id), data)
+}
+
+// Categories
+export function getCategories() {
+  return getCall(categoriesUrl)
+}
+
+// Reloads
+export function getReloads() {
+  return getCall(reloadsUrl)
+}
+export function validateReloads(reload) {
+  return postCall(reloadValidationUrl, reload)
+}
+
 export function getSalesStats() {
   return {
     dailySales: [
@@ -36,100 +104,6 @@ export function getAuctionsStats() {
     leastValuable: 45000,
     mostValuable: 2750000,
   }
-}
-
-export function getReloads() {
-  const states = [
-    { id: 1, name: 'En attente de validation' },
-    { id: 2, name: 'Validée' },
-    { id: 3, name: 'Refusée' },
-  ]
-  const userIds = _.shuffle([...Array(30).keys()])
-  return _.times(30, (index) => {
-    return {
-      id: index,
-      user: {
-        id: userIds[index],
-        username: faker.internet.userName(faker.name.firstName(), faker.name.lastName()),
-      },
-      amount: faker.finance.amount(100000, null, 2),
-      date: format(faker.date.past(), 'dd MMMM yyyy', { locale: fr }),
-      state: states[_.random(0, 2)],
-    }
-  })
-}
-
-export function getAuctions() {
-  const states = [
-    { id: 0, name: 'En Cours' },
-    { id: 1, name: 'Terminée' },
-  ]
-  const userIds = _.shuffle([...Array(30).keys()])
-  return _.times(30, (index) => {
-    return {
-      id: index,
-      user: {
-        id: userIds[index],
-        username: faker.internet.userName(faker.name.firstName(), faker.name.lastName()),
-      },
-      startDate: format(faker.date.past(), 'dd MMMM yyyy', { locale: fr }),
-      endDate: format(faker.date.future(), 'dd MMMM yyyy', { locale: fr }),
-      startPrice: faker.finance.amount(100000, null, 2),
-      topBid: faker.finance.amount(100000, null, 2),
-      state: states[_.random(0, 1)],
-      title: faker.commerce.product(),
-    }
-  })
-}
-
-export function getAuction(id) {
-  const states = [
-    { id: 0, name: 'En Cours' },
-    { id: 1, name: 'Terminée' },
-  ]
-  return {
-    id: id,
-    user: {
-      id: _.random(0, 29),
-      username: faker.internet.userName(faker.name.firstName(), faker.name.lastName()),
-    },
-    rawStartDate: faker.date.past(),
-    startDate: format(faker.date.past(), 'dd MMMM yyyy', { locale: fr }),
-    rawEndDate: faker.date.future(),
-    endDate: format(faker.date.future(), 'dd MMMM yyyy', { locale: fr }),
-    startPrice: faker.finance.amount(100000, null, 2),
-    topBid: faker.finance.amount(100000, null, 2),
-    state: states[_.random(0, 1)],
-    title: faker.commerce.product(),
-    description: faker.lorem.paragraphs(3),
-    category: {
-      id: _.random(0, 4),
-      name: faker.commerce.department(),
-    },
-    pictures: _.times(_.random(3, 5), (index) => faker.image.food(null, null, true)),
-    bids: _.times(10, (index) => {
-      const rawDate = faker.date.past()
-      return {
-        id: index,
-        user: {
-          id: _.random(0, 29),
-          username: faker.internet.userName(faker.name.firstName(), faker.name.lastName()),
-        },
-        amount: faker.finance.amount(100000, null, 2),
-        rawDate: rawDate,
-        date: format(rawDate, 'dd MMMM yyyy', { locale: fr }),
-      }
-    }),
-  }
-}
-
-export function getCategories() {
-  return _.times(5, (index) => {
-    return {
-      id: index,
-      name: faker.commerce.department(),
-    }
-  })
 }
 
 export function getCategory(id) {

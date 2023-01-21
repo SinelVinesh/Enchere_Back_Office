@@ -1,54 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CButton, CCard, CCardBody, CCol, CFormInput, CRow } from '@coreui/react'
 import DataTable from 'react-data-table-component'
 import PropTypes from 'prop-types'
+import SearchableDatatable from './SearchableDatatable'
 
-const List = ({ data, columns, title, selectable, linkFunction }) => {
-  const [filteredData, setFiltered] = useState(data)
-  const navigate = useNavigate()
-  const filterBar = React.useMemo(() => {
-    const filterData = (text) => {
-      const filtered = data.filter((entry) => {
-        if (text === '') return true
-        for (const column of columns) {
-          const target = column.selector(entry).toString()
-          if (target.match(new RegExp(text, 'i')) !== null) {
-            return true
-          }
-        }
-        return false
-      })
-      setFiltered(filtered)
-    }
-    return (
-      <CCol sm={3} lg={2}>
-        <CFormInput
-          size="sm"
-          type="text"
-          placeholder="Rechercher..."
-          onChange={(e) => filterData(e.target.value)}
-        />
-      </CCol>
-    )
-  })
+const List = ({
+  data,
+  columns,
+  title,
+  selectable,
+  linkFunction,
+  selectableDisableFunction,
+  handleRowSelection,
+  contextActions,
+  clearRow,
+}) => {
   return (
     <>
       <CCard>
         <CCardBody>
           <CRow>
-            <DataTable
+            <SearchableDatatable
               title={title}
               columns={columns}
-              data={filteredData}
-              selectableRows={selectable}
-              pagination
-              subHeader
-              subHeaderComponent={filterBar}
-              className={linkFunction ? 'clickable' : ''}
-              onRowClicked={(row) => {
-                if (linkFunction) navigate(linkFunction(row))
-              }}
+              data={data}
+              selectable={selectable}
+              selectableRowDisabled={selectableDisableFunction}
+              linkFunction={linkFunction}
+              contextActions={contextActions}
+              handleRowSelection={handleRowSelection}
+              clearRow={clearRow}
             />
           </CRow>
         </CCardBody>
@@ -63,5 +45,9 @@ List.propTypes = {
   data: PropTypes.array,
   selectable: PropTypes.bool,
   linkFunction: PropTypes.func,
+  selectableDisableFunction: PropTypes.func,
+  handleRowSelection: PropTypes.func,
+  contextActions: PropTypes.object,
+  clearRow: PropTypes.bool,
 }
 export default List

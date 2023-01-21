@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { CCol, CFormInput, CRow } from '@coreui/react'
 import DataTable from 'react-data-table-component'
@@ -8,12 +8,13 @@ const SearchableDatatable = ({
   columns,
   title,
   selectable,
-  linkBase,
-  linkId,
+  linkFunction,
   handleRowSelection,
   contextActions,
+  selectableRowDisabled,
+  clearRow,
 }) => {
-  const [filteredData, setFiltered] = useState(data)
+  const [filteredData, setFiltered] = useState()
   const filterBar = React.useMemo(() => {
     const filterData = (text) => {
       const filtered = data.filter((entry) => {
@@ -39,8 +40,11 @@ const SearchableDatatable = ({
         />
       </CCol>
     )
-  }, [])
+  }, [data])
   const navigate = useNavigate()
+  useEffect(() => {
+    setFiltered(data)
+  }, [data])
   return (
     <CRow>
       <DataTable
@@ -49,14 +53,18 @@ const SearchableDatatable = ({
         data={filteredData}
         selectableRows={selectable}
         onSelectedRowsChange={handleRowSelection}
+        selectableRowDisabled={
+          selectableRowDisabled !== undefined ? selectableRowDisabled : () => false
+        }
         pagination
         subHeader
         contextActions={contextActions}
         subHeaderComponent={filterBar}
-        className={linkBase ? 'clickable' : ''}
+        className={linkFunction ? 'clickable' : ''}
         onRowClicked={(row) => {
-          if (linkBase) navigate(`/${linkBase}/${row[linkId]}`)
+          if (linkFunction) navigate(linkFunction(row))
         }}
+        clearSelectedRows={clearRow}
       />
     </CRow>
   )
@@ -67,10 +75,11 @@ SearchableDatatable.propTypes = {
   columns: PropTypes.array.isRequired,
   title: PropTypes.string,
   selectable: PropTypes.bool,
-  linkBase: PropTypes.string,
-  linkId: PropTypes.string,
+  linkFunction: PropTypes.func,
   handleRowSelection: PropTypes.func,
   contextActions: PropTypes.object,
+  selectableRowDisabled: PropTypes.func,
+  clearRow: PropTypes.bool,
 }
 
 export default SearchableDatatable

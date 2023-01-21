@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Form from '../../../../components/generic/Form'
-import { useParams } from 'react-router-dom'
-import { getAuction, getCategories } from '../../../../database/Api'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getAuction, getCategories, updateAuction } from '../../../../database/Api'
 import { format } from 'date-fns'
+import { fr } from 'date-fns/locale'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
 const AuctionModificationForm = () => {
   const { id } = useParams()
-  const auction = getAuction(id)
-  const categories = getCategories()
-  const categoriesOptions = categories.map((category) => ({
-    value: category.id,
-    label: category.name,
-  }))
+  const navigate = useNavigate()
+  const [auction, setAuction] = useState(undefined)
+  const [categories, setCategories] = useState(undefined)
+  const [categoriesOptions, setCategoriesOptions] = useState(undefined)
   const properties = [
     {
       label: 'Titre',
@@ -42,49 +43,101 @@ const AuctionModificationForm = () => {
       label: 'Etat',
       name: 'state',
       type: 'disabled',
-      selector: (auction) => auction.state.name,
+      selector: (auction) => auction.auctionState.value,
     },
     {
       label: 'Utilisateur',
       name: 'user',
       type: 'disabled',
-      selector: (auction) => auction.user.username,
+      selector: (auction) => auction.appUser.username,
     },
     {
       label: 'Date de début',
       name: 'startDate',
       type: 'datetime-local',
-      selector: (auction) => format(new Date(auction.rawStartDate), "yyyy-MM-dd'T'HH:mm"),
+      selector: (auction) => format(new Date(auction.startDate), "yyyy-MM-dd'T'HH:mm"),
       change: (e) => (auction.startDate = new Date(e.target.value)),
     },
     {
       label: 'Date de fin',
       name: 'endDate',
-      type: 'datetime-local',
-      selector: (auction) => format(new Date(auction.rawEndDate), "yyyy-MM-dd'T'HH:mm"),
-      change: (e) => (auction.endDate = new Date(e.target.value)),
+      type: 'disabled',
+      selector: (auction) =>
+        format(new Date(auction.endDate), 'dd MMMM yyyy à HH:mm', { locale: fr }),
     },
     {
       label: 'Mise de départ',
       name: 'startPrice',
       type: 'number',
-      selector: (auction) => auction.startPrice,
-      change: (e) => (auction.startPrice = e.target.value),
+      selector: (auction) => auction.startingPrice,
+      change: (e) => (auction.startingPrice = e.target.value),
     },
     {
-      label: 'Images',
-      name: 'pictures',
-      type: 'image-gallery',
-      selector: (auction) => auction.pictures,
-      change: (links) => {
-        auction.pictures = links
-      },
+      label: "Pas des mises de l'enchère",
+      name: 'bidStep',
+      type: 'number',
+      selector: (auction) => auction.bidStep,
+      change: (e) => (auction.bidStep = e.target.value),
     },
+    // {
+    //   label: 'Images',
+    //   name: 'pictures',
+    //   type: 'image-gallery',
+    //   selector: (auction) => auction.pictures,
+    //   change: (links) => {
+    //     auction.pictures = links
+    //   },
+    // },
   ]
   const submit = () => {
-    console.log(auction)
+    const body = {
+      id: auction.id,
+      title: auction.title,
+      description: auction.description,
+      category: {
+        id: auction.category.id,
+      },
+      startDate: auction.startDate,
+      startingPrice: auction.startingPrice,
+      bidStep: auction.bidStep,
+    }
+    updateAuction(id, body).then(() => {
+      const swal = withReactContent(Swal)
+      swal
+        .fire({
+          icon: 'success',
+          title: "L'enchère a été modifié avec succes",
+          timer: 2000,
+          showConfirmButton: false,
+        })
+        .then(() => {
+          navigate(-1)
+        })
+        .catch((error) => {
+          const swalData = {
+            icon: 'error',
+            title: "Une erreur est survenue lors de l'enregistrement",
+            text: error.response.data.message,
+          }
+          swal.fire(swalData).then()
+        })
+    })
   }
-  return <Form data={auction} properties={properties} submit={submit} />
+  useEffect(() => {
+    getCategories().then((data) => {
+      setCategories(data)
+      setCategoriesOptions(
+        data.map((category) => ({
+          value: category.id,
+          label: category.name,
+        })),
+      )
+      getAuction(id).then((data) => {
+        setAuction(data)
+      })
+    })
+  }, [id])
+  return <>{auction && <Form data={auction} properties={properties} submit={submit} />}</>
 }
 
 export default AuctionModificationForm

@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getAuction } from '../../../../database/Api'
 import Details from '../../../../components/generic/Details'
-import { isBefore } from 'date-fns'
+import { format } from 'date-fns'
+import { fr } from 'date-fns/locale'
 
 const AuctionDetails = () => {
   const { id } = useParams()
-  const auction = getAuction(id)
-  auction.bids = auction.bids.sort((a, b) => (isBefore(a.rawDate, b.rawDate) ? 1 : -1))
+  const [auction, setAuction] = useState(undefined)
   const bidsColumns = [
     {
       name: 'ID',
@@ -16,39 +16,70 @@ const AuctionDetails = () => {
     },
     {
       name: 'Utilisateur',
-      selector: (row) => row.user.username,
+      selector: (row) => row.appUser.username,
       sortable: false,
     },
     {
       name: 'Montant',
-      selector: (row) => row.amount,
+      selector: (row) => row.amount.toLocaleString('fr-FR', { minimumFractionDigits: 2 }),
       sortable: false,
     },
     {
       name: 'Date',
-      selector: (row) => row.date,
+      selector: (row) => format(new Date(row.date), 'dd MMMM yyyy à HH:mm', { locale: fr }),
       sortable: false,
     },
   ]
   const properties = [
-    { selector: (auction) => auction.pictures, label: 'Photos', type: 'image' },
-    { selector: (auction) => auction.id, label: 'ID', type: 'text' },
-    { selector: (auction) => auction.description, label: 'Description', type: 'text' },
-    { selector: (auction) => auction.category.name, label: 'Categorie', type: 'text' },
-    { selector: (auction) => auction.user.username, label: 'Utilisateur', type: 'text' },
-    { selector: (auction) => auction.state.name, label: 'Etat', type: 'text' },
-    { selector: (auction) => auction.startDate, label: 'Date de début', type: 'text' },
-    { selector: (auction) => auction.endDate, label: 'Date de fin', type: 'text' },
-    { selector: (auction) => auction.startPrice, label: 'Mise de départ', type: 'text' },
-    { selector: (auction) => auction.topBid, label: 'Mise actuelle', type: 'text' },
+    // { selector: (auction) => auction.pictures, label: 'Photos', type: 'image' },
+    { selector: (element) => element.id, label: 'ID', type: 'text' },
+    { selector: (element) => element.description, label: 'Description', type: 'text' },
+    { selector: (element) => element.category.name, label: 'Categorie', type: 'text' },
+    { selector: (element) => element.appUser.username, label: 'Utilisateur', type: 'text' },
+    { selector: (element) => element.auctionState.value, label: 'Etat', type: 'text' },
     {
-      selector: (auction) => auction.bids,
+      selector: (element) =>
+        format(new Date(element.startDate), 'dd MMMM yyyy à HH:mm', { locale: fr }),
+      label: 'Date de début',
+      type: 'text',
+    },
+    {
+      selector: (element) =>
+        format(new Date(element.endDate), 'dd MMMM yyyy à HH:mm', { locale: fr }),
+      label: 'Date de fin',
+      type: 'text',
+    },
+    {
+      selector: (element) =>
+        element.startingPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2 }),
+      label: 'Mise de départ',
+      type: 'text',
+    },
+    {
+      selector: (element) =>
+        element.topBid.amount.toLocaleString('fr-FR', { minimumFractionDigits: 2 }),
+      label: 'Mise actuelle',
+      type: 'text',
+    },
+    {
+      selector: (element) => element.history,
       label: 'Historiques des offres',
       type: 'table',
       columns: bidsColumns,
     },
   ]
-  return <Details title={auction.title} data={auction} properties={properties} />
+  useEffect(() => {
+    getAuction(id).then((data) => {
+      setAuction(data)
+    })
+  }, [id])
+  return (
+    <>
+      {auction !== undefined && (
+        <Details title={auction.title} data={auction} properties={properties} />
+      )}
+    </>
+  )
 }
 
 export default AuctionDetails
