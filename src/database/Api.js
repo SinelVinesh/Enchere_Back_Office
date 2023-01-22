@@ -72,13 +72,13 @@ export const logout = () => {
 
 // Auctions
 export function getAuctions() {
-  return getCall(auctionsUrl)
+  return getCall(auctionsUrl, true)
 }
 export function getAuction(id) {
-  return getCall(auctionUrl(id))
+  return getCall(auctionUrl(id), true)
 }
 export function updateAuction(id, data) {
-  return putCall(auctionUrl(id), data)
+  return putCall(auctionUrl(id), data, true)
 }
 
 // Categories
@@ -86,45 +86,45 @@ export function getCategories() {
   return getCall(categoriesUrl)
 }
 export function getCategory(id) {
-  return getCall(categoryUrl(id))
+  return getCall(categoryUrl(id), true)
 }
 
 export function updateCategory(id, data) {
-  return putCall(categoryUrl(id), data)
+  return putCall(categoryUrl(id), data, true)
 }
 
 export function addCategory(category) {
-  return postCall(categoriesUrl, category)
+  return postCall(categoriesUrl, category, true)
 }
 
 // Reloads
 export function getReloads() {
-  return getCall(reloadsUrl)
+  return getCall(reloadsUrl, true)
 }
 export function validateReloads(reload) {
-  return postCall(reloadValidationUrl, reload)
+  return postCall(reloadValidationUrl, reload, true)
 }
 
 // Settings
 export function getSettings() {
-  return getCall(settingsUrl)
+  return getCall(settingsUrl, true)
 }
 export function getSetting(id) {
-  return getCall(settingUrl(id))
+  return getCall(settingUrl(id), true)
 }
 
 export function updateSetting(id, data) {
-  return putCall(settingUrl(id), data)
+  return putCall(settingUrl(id), data, true)
 }
 
 export function addSetting(category) {
-  return postCall(settingsUrl, category)
+  return postCall(settingsUrl, category, true)
 }
 
 export function getTurnoverStats() {
-  return getCall(turnoverUrl)
+  return getCall(turnoverUrl, true)
 }
 
 export function getAuctionsStats() {
-  return getCall(auctionsStatsUrl)
+  return getCall(auctionsStatsUrl, true)
 }
