@@ -5,8 +5,9 @@ import { fr } from 'date-fns/locale'
 import axios from 'axios'
 
 /* urls */
-const host = 'http://localhost:8080'
-// 'https://auctions-app.up.railway.app'
+const host =
+// 'http://localhost:8080'
+  'https://auctions-app.up.railway.app'
 // auth
 const loginUrl = `${host}/admin/login`
 const logoutUrl = `${host}/admin/logout`
