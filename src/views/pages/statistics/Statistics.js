@@ -8,8 +8,8 @@ const Statistics = () => {
   const [salesStats, setSalesStats] = useState(undefined)
   const [auctionsStats, setAuctionsStats] = useState(undefined)
   let widgets = []
-  let salesLineChartData = {}
-  let auctionsChartData = {}
+  let salesLineChartData = undefined
+  let auctionsChartData = undefined
   if (salesStats && auctionsStats) {
     widgets = [
       {
@@ -130,7 +130,7 @@ const Statistics = () => {
             </CCol>
           </CRow>
           <CRow>
-            {salesStats && (
+            {salesLineChartData && (
               <CChartLine
                 style={{ height: '300px', marginTop: '40px' }}
                 data={{
@@ -160,7 +160,7 @@ const Statistics = () => {
             </CCol>
           </CRow>
           <CRow>
-            {auctionsStats && (
+            {auctionsChartData && (
               <CChartLine
                 style={{ height: '300px', marginTop: '40px' }}
                 data={{
