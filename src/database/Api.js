@@ -6,7 +6,7 @@ import axios from 'axios'
 
 /* urls */
 const host =
-// 'http://localhost:8080'
+  // 'http://localhost:8080'
   'https://auctions-app.up.railway.app'
 // auth
 const loginUrl = `${host}/admin/login`
