@@ -26,8 +26,7 @@ const Login = () => {
   const submit = () => {
     login(user)
       .then((data) => {
-        localStorage.setItem('admin-token', JSON.stringify(data.token))
-        console.log(localStorage.getItem('admin-token'))
+        localStorage.setItem('admin-token', data.token)
         const swalData = {
           icon: 'success',
           title: 'Connexion réussie',
