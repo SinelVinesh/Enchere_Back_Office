@@ -67,6 +67,6 @@ const SettingModificationForm = () => {
       setSetting(data)
     })
   }, [id])
-  return <> {setting && <Form data={setting} properties={properties} submit={submit} />} </>
+  return <Form data={setting} properties={properties} submit={submit} />
 }
 export default SettingModificationForm

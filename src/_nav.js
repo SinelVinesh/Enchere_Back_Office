@@ -48,11 +48,6 @@ const _nav = [
         name: 'Liste des paramètres',
         to: '/settings',
       },
-      {
-        component: CNavItem,
-        name: 'Ajouter un paramètre',
-        to: '/settings/new',
-      },
     ],
   },
 ]

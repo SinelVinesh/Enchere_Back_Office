@@ -16,6 +16,7 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/mater
 import EditableGallery from './EditableGallery'
 import SearchableDatatable from './SearchableDatatable'
 import DataTable from 'react-data-table-component'
+import Spinner from '../Spinner'
 const Form = ({
   data,
   properties,
@@ -39,7 +40,7 @@ const Form = ({
   ]
   let columns = []
   if (multiple) {
-    columns = properties.map((property) => {
+    columns = properties?.map((property) => {
       return {
         name: property.label,
         selector: property.selector,
@@ -48,91 +49,100 @@ const Form = ({
     })
   }
   return (
-    <CCard>
-      <CCardBody>
-        {properties.map((propety) => (
-          <div className={'row mb-2'} key={propety.id}>
-            <div className={'col-12'}>
-              {basicInputs.find((input) => {
-                return input === propety.type
-              }) !== undefined && (
-                <TextField
-                  variant={'standard'}
-                  type={propety.type}
-                  defaultValue={propety.selector(data)}
-                  name={propety.name}
-                  label={propety.label}
-                  fullWidth
-                  onChange={(e) => propety.change(e)}
+    <>
+      {data !== undefined ? (
+        <CCard>
+          <CCardBody>
+            {properties?.map((propety) => (
+              <div className={'row mb-2'} key={propety.id}>
+                <div className={'col-12'}>
+                  {basicInputs.find((input) => {
+                    return input === propety.type
+                  }) !== undefined && (
+                    <TextField
+                      variant={'standard'}
+                      type={propety.type}
+                      defaultValue={propety.selector(data)}
+                      name={propety.name}
+                      label={propety.label}
+                      fullWidth
+                      onChange={(e) => propety.change(e)}
+                    />
+                  )}
+                  {propety.type === 'textArea' && (
+                    <TextField
+                      variant={'standard'}
+                      label={propety.label}
+                      defaultValue={propety.selector(data)}
+                      multiline
+                      maxRows={4}
+                      fullWidth
+                      onChange={propety.change}
+                    />
+                  )}
+                  {propety.type === 'select' && (
+                    <FormControl variant={'standard'} fullWidth>
+                      <InputLabel id={propety.label}>{propety.label}</InputLabel>
+                      <Select
+                        labelId={propety.label}
+                        defaultValue={propety.selector(data)}
+                        variant={'standard'}
+                        onChange={propety.change}
+                      >
+                        {propety.options?.map((option) => (
+                          <MenuItem value={option.value} key={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                  {propety.type === 'disabled' && (
+                    <>
+                      <CFormLabel>{propety.label}</CFormLabel>
+                      <p>{propety.selector(data)}</p>
+                    </>
+                  )}
+                  {propety.type === 'image-gallery' && (
+                    <>
+                      <CFormLabel>{propety.label}</CFormLabel>
+                      <EditableGallery
+                        links={propety.selector(data)}
+                        changeLinks={propety.change}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+            <CRow>
+              <CCol sm={12}>
+                <CButton color={'primary'} onClick={multiple ? add : submit}>
+                  {multiple ? 'Ajouter' : 'Enregistrer'}
+                </CButton>
+              </CCol>
+            </CRow>
+            {multiple && (
+              <>
+                <SearchableDatatable
+                  title={'Catégories à enregistrer'}
+                  data={multipleData}
+                  columns={columns}
+                  selectable
+                  handleRowSelection={multipleSelectionHandler}
+                  contextActions={contextActions}
                 />
-              )}
-              {propety.type === 'textArea' && (
-                <TextField
-                  variant={'standard'}
-                  label={propety.label}
-                  defaultValue={propety.selector(data)}
-                  multiline
-                  maxRows={4}
-                  fullWidth
-                  onChange={propety.change}
-                />
-              )}
-              {propety.type === 'select' && (
-                <FormControl variant={'standard'} fullWidth>
-                  <InputLabel id={propety.label}>{propety.label}</InputLabel>
-                  <Select
-                    labelId={propety.label}
-                    defaultValue={propety.selector(data)}
-                    variant={'standard'}
-                    onChange={propety.change}
-                  >
-                    {propety.options.map((option) => (
-                      <MenuItem value={option.value} key={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-              {propety.type === 'disabled' && (
-                <>
-                  <CFormLabel>{propety.label}</CFormLabel>
-                  <p>{propety.selector(data)}</p>
-                </>
-              )}
-              {propety.type === 'image-gallery' && (
-                <>
-                  <CFormLabel>{propety.label}</CFormLabel>
-                  <EditableGallery links={propety.selector(data)} changeLinks={propety.change} />
-                </>
-              )}
-            </div>
-          </div>
-        ))}
-        <CRow>
-          <CCol sm={12}>
-            <CButton color={'primary'} onClick={multiple ? add : submit}>
-              {multiple ? 'Ajouter' : 'Enregistrer'}
-            </CButton>
-          </CCol>
-        </CRow>
-        {multiple && (
-          <>
-            <SearchableDatatable
-              title={'Catégories à enregistrer'}
-              data={multipleData}
-              columns={columns}
-              selectable
-              handleRowSelection={multipleSelectionHandler}
-              contextActions={contextActions}
-            />
-            <CButton color={'primary'} onClick={submit}>
-              Enregistrer
-            </CButton>
-          </>
-        )}
-      </CCardBody>
-    </CCard>
+                <CButton color={'primary'} onClick={submit}>
+                  Enregistrer
+                </CButton>
+              </>
+            )}
+          </CCardBody>
+        </CCard>
+      ) : (
+        <Spinner />
+      )}
+    </>
   )
 }
 Form.propTypes = {

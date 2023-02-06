@@ -13,7 +13,7 @@ const EditableGallery = ({ links, changeLinks }) => {
     <ImageList>
       {images.map((link, index) => (
         <ImageListItem key={link}>
-          <img src={`${link}?=w=164&h=164&fit=crop&auto=format`} alt={index} loading="lazy" />
+          <img src={`${link}`} alt={index} loading="lazy" />
           <ImageListItemBar
             actionIcon={
               <IconButton onClick={() => deleteImage(link)}>

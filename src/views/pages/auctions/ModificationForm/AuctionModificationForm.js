@@ -17,21 +17,21 @@ const AuctionModificationForm = () => {
       label: 'Titre',
       name: 'title',
       type: 'text',
-      selector: (auction) => auction.title,
+      selector: (auction) => auction?.title,
       change: (e) => (auction.title = e.target.value),
     },
     {
       label: 'Description',
       name: 'description',
       type: 'textArea',
-      selector: (auction) => auction.description,
+      selector: (auction) => auction?.description,
       change: (e) => (auction.description = e.target.value),
     },
     {
       label: 'Categorie',
       name: 'category',
       type: 'select',
-      selector: (auction) => auction.category.id,
+      selector: (auction) => auction?.category.id,
       options: categoriesOptions,
       change: (e) => {
         auction.category.id = e.target.value
@@ -43,19 +43,20 @@ const AuctionModificationForm = () => {
       label: 'Etat',
       name: 'state',
       type: 'disabled',
-      selector: (auction) => auction.auctionState.value,
+      selector: (auction) => auction?.auctionState.value,
     },
     {
       label: 'Utilisateur',
       name: 'user',
       type: 'disabled',
-      selector: (auction) => auction.appUser.username,
+      selector: (auction) => auction?.appUser.username,
     },
     {
       label: 'Date de début',
       name: 'startDate',
       type: 'datetime-local',
-      selector: (auction) => format(new Date(auction.startDate), "yyyy-MM-dd'T'HH:mm"),
+      selector: (auction) =>
+        auction === undefined ? '' : format(new Date(auction?.startDate), "yyyy-MM-dd'T'HH:mm"),
       change: (e) => (auction.startDate = new Date(e.target.value)),
     },
     {
@@ -63,29 +64,33 @@ const AuctionModificationForm = () => {
       name: 'endDate',
       type: 'disabled',
       selector: (auction) =>
-        format(new Date(auction.endDate), 'dd MMMM yyyy à HH:mm', { locale: fr }),
+        auction === undefined
+          ? ''
+          : format(new Date(auction.endDate), 'dd MMMM yyyy à HH:mm', {
+              locale: fr,
+            }),
     },
     {
       label: 'Mise de départ',
       name: 'startPrice',
       type: 'number',
-      selector: (auction) => auction.startingPrice,
+      selector: (auction) => auction?.startingPrice,
       change: (e) => (auction.startingPrice = e.target.value),
     },
     {
       label: "Pas des mises de l'enchère",
       name: 'bidStep',
       type: 'number',
-      selector: (auction) => auction.bidStep,
+      selector: (auction) => auction?.bidStep,
       change: (e) => (auction.bidStep = e.target.value),
     },
     // {
     //   label: 'Images',
     //   name: 'pictures',
     //   type: 'image-gallery',
-    //   selector: (auction) => auction.pictures,
+    //   selector: (auction) => auction.images.map((image) => image.photoPath),
     //   change: (links) => {
-    //     auction.pictures = links
+    //     auction.images = links
     //   },
     // },
   ]
@@ -134,11 +139,12 @@ const AuctionModificationForm = () => {
         })),
       )
       getAuction(id).then((data) => {
+        data.startDate = new Date(data.startDate)
         setAuction(data)
       })
     })
   }, [id])
-  return <>{auction && <Form data={auction} properties={properties} submit={submit} />}</>
+  return <Form data={auction} properties={properties} submit={submit} />
 }
 
 export default AuctionModificationForm

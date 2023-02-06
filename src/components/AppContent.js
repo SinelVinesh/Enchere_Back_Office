@@ -4,14 +4,24 @@ import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
+import { isBefore } from 'date-fns'
 
 const AppContent = () => {
   const navigate = useNavigate()
   useEffect(() => {
-    if (localStorage.getItem('admin-token') === null) {
+    if (sessionStorage.getItem('admin-token') === null) {
       navigate('/login')
     }
-  }, [])
+    if (
+      isBefore(
+        new Date(JSON.parse(sessionStorage.getItem('admin-token'))?.expirationDate),
+        new Date(),
+      )
+    ) {
+      sessionStorage.removeItem('admin-token')
+      navigate('/login')
+    }
+  }, [navigate])
   return (
     <CContainer lg>
       <Suspense fallback={<CSpinner color="primary" />}>

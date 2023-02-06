@@ -3,6 +3,7 @@ import { getAuctionsStats, getSalesStats, getTurnoverStats } from 'database/Api'
 import { CCard, CCardBody, CCol, CRow, CWidgetStatsA } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
+import Spinner from 'components/Spinner'
 
 const Statistics = () => {
   const [salesStats, setSalesStats] = useState(undefined)
@@ -105,22 +106,18 @@ const Statistics = () => {
   return (
     <>
       <CRow>
-        {salesStats &&
-          auctionsStats &&
-          widgets.map((widget) => {
-            return (
-              <>
-                <CCol sm={6} lg={3}>
-                  <CWidgetStatsA
-                    className="mb-4"
-                    color={widget.color}
-                    value={widget.value}
-                    title={widget.title}
-                  />
-                </CCol>
-              </>
-            )
-          })}
+        {widgets.map((widget, index) => {
+          return (
+            <CCol sm={6} lg={3} key={`wid${index}`}>
+              <CWidgetStatsA
+                className="mb-4"
+                color={widget.color}
+                value={widget.value}
+                title={widget.title}
+              />
+            </CCol>
+          )
+        })}
       </CRow>
       <CCard className="mb-4">
         <CCardBody>
@@ -130,25 +127,23 @@ const Statistics = () => {
             </CCol>
           </CRow>
           <CRow>
-            {salesLineChartData && (
-              <CChartLine
-                style={{ height: '300px', marginTop: '40px' }}
-                data={{
-                  labels: salesLineChartData.labels,
-                  datasets: [
-                    {
-                      label: 'Ventes journalieres',
-                      backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                      borderColor: getStyle('--cui-info'),
-                      pointHoverBackgroundColor: getStyle('--cui-info'),
-                      borderWidth: 2,
-                      data: salesLineChartData.data,
-                    },
-                  ],
-                }}
-                options={lineChartBaseOption}
-              />
-            )}
+            <CChartLine
+              style={{ height: '300px', marginTop: '40px' }}
+              data={{
+                labels: salesLineChartData?.labels,
+                datasets: [
+                  {
+                    label: 'Ventes journalieres',
+                    backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
+                    borderColor: getStyle('--cui-info'),
+                    pointHoverBackgroundColor: getStyle('--cui-info'),
+                    borderWidth: 2,
+                    data: salesLineChartData?.data,
+                  },
+                ],
+              }}
+              options={lineChartBaseOption}
+            />
           </CRow>
         </CCardBody>
       </CCard>
@@ -160,33 +155,31 @@ const Statistics = () => {
             </CCol>
           </CRow>
           <CRow>
-            {auctionsChartData && (
-              <CChartLine
-                style={{ height: '300px', marginTop: '40px' }}
-                data={{
-                  labels: auctionsChartData.labels,
-                  datasets: [
-                    {
-                      label: 'Créée',
-                      backgroundColor: hexToRgba(getStyle('--cui-purple'), 10),
-                      borderColor: getStyle('--cui-purple'),
-                      pointHoverBackgroundColor: getStyle('--cui-purple'),
-                      borderWidth: 2,
-                      data: auctionsChartData.data[0],
-                    },
-                    {
-                      label: 'Terminé',
-                      backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                      borderColor: getStyle('--cui-info'),
-                      pointHoverBackgroundColor: getStyle('--cui-info'),
-                      borderWidth: 2,
-                      data: auctionsChartData.data[1],
-                    },
-                  ],
-                }}
-                options={lineChartBaseOption}
-              />
-            )}
+            <CChartLine
+              style={{ height: '300px', marginTop: '40px' }}
+              data={{
+                labels: auctionsChartData?.labels,
+                datasets: [
+                  {
+                    label: 'Créée',
+                    backgroundColor: hexToRgba(getStyle('--cui-purple'), 10),
+                    borderColor: getStyle('--cui-purple'),
+                    pointHoverBackgroundColor: getStyle('--cui-purple'),
+                    borderWidth: 2,
+                    data: auctionsChartData?.data[0],
+                  },
+                  {
+                    label: 'Terminé',
+                    backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
+                    borderColor: getStyle('--cui-info'),
+                    pointHoverBackgroundColor: getStyle('--cui-info'),
+                    borderWidth: 2,
+                    data: auctionsChartData?.data[1],
+                  },
+                ],
+              }}
+              options={lineChartBaseOption}
+            />
           </CRow>
         </CCardBody>
       </CCard>

@@ -18,21 +18,36 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { login } from '../../../database/Api'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
+import Spinner from '../../../components/Spinner'
 
 const Login = () => {
   const [user, setUser] = useState({ username: 'Jean', password: '123', email: 'Jean' })
   const navigate = useNavigate()
   const swal = withReactContent(Swal)
   const submit = () => {
+    const loadingSwal = {
+      title: 'Connexion en cours...',
+      html: (
+        <div style={{ overflow: 'hidden' }}>
+          <Spinner />
+        </div>
+      ),
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      showConfirmButton: false,
+    }
+    swal.fire(loadingSwal)
     login(user)
       .then((data) => {
-        localStorage.setItem('admin-token', data.token)
+        sessionStorage.setItem('admin-token', JSON.stringify(data.token))
         const swalData = {
           icon: 'success',
           title: 'Connexion réussie',
           timer: 1000,
           showConfirmButton: false,
         }
+        swal.close()
         swal.fire(swalData).then(() => {
           navigate('/dashboard')
         })
@@ -56,7 +71,7 @@ const Login = () => {
                 <CCardBody>
                   <CForm>
                     <h1>Connexion</h1>
-                    <p className="text-medium-emphasis">Sign In to your account</p>
+                    <p className="text-medium-emphasis">Connectez vous a votre compte</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />

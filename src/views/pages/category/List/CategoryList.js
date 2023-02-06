@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getCategories } from '../../../../database/Api'
 import List from '../../../../components/generic/List'
 const CategoryList = () => {
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState(undefined)
   const columns = [
     {
       name: 'ID',

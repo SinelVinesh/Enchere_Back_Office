@@ -53,6 +53,6 @@ const CategoryModificationForm = () => {
       setCategory(data)
     })
   }, [id])
-  return <>{category && <Form data={category} properties={properties} submit={submit} />}</>
+  return <Form data={category} properties={properties} submit={submit} />
 }
 export default CategoryModificationForm

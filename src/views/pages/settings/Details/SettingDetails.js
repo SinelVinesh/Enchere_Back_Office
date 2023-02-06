@@ -4,6 +4,7 @@ import { getSetting } from '../../../../database/Api'
 import Details from '../../../../components/generic/Details'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import Spinner from '../../../../components/Spinner'
 
 const SettingDetails = () => {
   const { id } = useParams()
@@ -45,9 +46,11 @@ const SettingDetails = () => {
   }, [id])
   return (
     <>
-      {setting && (
+      {setting ? (
         <Details title={`Détail de ${setting.name}`} data={setting} properties={properties} />
-      )}{' '}
+      ) : (
+        <Spinner />
+      )}
     </>
   )
 }

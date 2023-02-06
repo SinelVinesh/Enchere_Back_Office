@@ -5,7 +5,7 @@ import { fr } from 'date-fns/locale'
 import { format } from 'date-fns'
 
 const AuctionList = () => {
-  const [auctions, setAuctions] = useState([])
+  const [auctions, setAuctions] = useState(undefined)
 
   useEffect(() => {
     getAuctions().then((data) => {
@@ -30,12 +30,12 @@ const AuctionList = () => {
     },
     {
       name: 'Date de début',
-      selector: (row) => format(new Date(row.startDate), 'dd MMMM yyyy', { locale: fr }),
+      selector: (row) => format(new Date(row.startDate), 'dd MMMM yyyy à HH:mm', { locale: fr }),
       sortable: true,
     },
     {
       name: 'Date de fin',
-      selector: (row) => format(new Date(row.endDate), 'dd MMMM yyyy', { locale: fr }),
+      selector: (row) => format(new Date(row.endDate), 'dd MMMM yyyy à HH:mm', { locale: fr }),
       sortable: true,
     },
     {

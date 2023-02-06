@@ -8,7 +8,7 @@ import { format } from 'date-fns'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 const Reloads = () => {
-  const [reloads, setReloads] = useState([])
+  const [reloads, setReloads] = useState(undefined)
   const [clearRow, setClearRow] = useState(false)
   const [selectedRows, setSelectedRows] = useState([])
   const columns = [
@@ -132,18 +132,16 @@ const Reloads = () => {
     })
   }, [])
   return (
-    <>
-      <List
-        title={'Liste des rechargements'}
-        columns={columns}
-        selectable={true}
-        selectableDisableFunction={(row) => row.currentState.reloadState.id !== 1}
-        data={reloads}
-        handleRowSelection={addSelected}
-        contextActions={contextActions}
-        clearRow={clearRow}
-      />
-    </>
+    <List
+      title={'Liste des demandes de rechargement de compte'}
+      columns={columns}
+      selectable={true}
+      selectableDisableFunction={(row) => row.currentState.reloadState.id !== 1}
+      data={reloads}
+      handleRowSelection={addSelected}
+      contextActions={contextActions}
+      clearRow={clearRow}
+    />
   )
 }
 

@@ -7,8 +7,8 @@ const CategoryDetails = () => {
   const { id } = useParams()
   const [category, setCategory] = useState(undefined)
   const properties = [
-    { selector: (category) => category.id, label: 'ID', type: 'text' },
-    { selector: (category) => category.name, label: 'Désignation', type: 'text' },
+    { selector: (category) => category?.id, label: 'ID', type: 'text' },
+    { selector: (category) => category?.name, label: 'Désignation', type: 'text' },
   ]
   useEffect(() => {
     getCategory(id).then(
@@ -18,13 +18,7 @@ const CategoryDetails = () => {
       [id],
     )
   })
-  return (
-    <>
-      {category && (
-        <Details title={`Détail de ${category.name}`} data={category} properties={properties} />
-      )}
-    </>
-  )
+  return <Details title={`Détail de ${category?.name}`} data={category} properties={properties} />
 }
 
 export default CategoryDetails

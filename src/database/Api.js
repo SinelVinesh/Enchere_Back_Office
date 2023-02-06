@@ -5,9 +5,8 @@ import { fr } from 'date-fns/locale'
 import axios from 'axios'
 
 /* urls */
-const host =
-  // 'http://localhost:8080'
-  'https://auctions-app.up.railway.app'
+// const host = 'http://localhost:8080'
+const host = 'https://auctions-app.up.railway.app'
 // auth
 const loginUrl = `${host}/admin/login`
 const logoutUrl = `${host}/admin/logout`
@@ -32,7 +31,12 @@ const auctionsStatsUrl = `${host}/statistics/auctions`
 export const getCall = (url, auth = false) => {
   let config = {}
   if (auth) {
-    config = { headers: { Authorization: `Bearer ${localStorage.getItem('admin-token')}` } }
+    config = {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('admin-token')).value}`,
+      },
+    }
+    console.log(config)
   }
   return axios
     .get(url, config)
@@ -43,7 +47,11 @@ export const getCall = (url, auth = false) => {
 export const postCall = (url, data, auth = false) => {
   let config = {}
   if (auth) {
-    config = { headers: { Authorization: 'Bearer ' + localStorage.getItem('admin-token') } }
+    config = {
+      headers: {
+        Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('admin-token')).value,
+      },
+    }
   }
   return axios
     .post(url, data, config)
@@ -54,7 +62,11 @@ export const postCall = (url, data, auth = false) => {
 export const putCall = (url, data, auth = false) => {
   let config = {}
   if (auth) {
-    config = { headers: { Authorization: 'Bearer ' + localStorage.getItem('admin-token') } }
+    config = {
+      headers: {
+        Authorization: 'Bearer ' + JSON.parse(sessionStorage.getItem('admin-token')).value,
+      },
+    }
   }
   return axios
     .put(url, data, config)

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { CCol, CFormInput, CRow } from '@coreui/react'
+import { CCol, CFormInput, CRow, CSpinner } from '@coreui/react'
 import DataTable from 'react-data-table-component'
 import { useNavigate } from 'react-router-dom'
+import Spinner from '../Spinner'
 const SearchableDatatable = ({
   data,
   columns,
@@ -65,6 +66,8 @@ const SearchableDatatable = ({
           if (linkFunction) navigate(linkFunction(row))
         }}
         clearSelectedRows={clearRow}
+        progressPending={data === undefined}
+        progressComponent={<Spinner />}
       />
     </CRow>
   )

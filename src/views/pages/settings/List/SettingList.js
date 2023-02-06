@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { getSettings } from '../../../../database/Api'
 import List from '../../../../components/generic/List'
 const SettingList = () => {
-  const [settings, setSettings] = React.useState([])
+  const [settings, setSettings] = React.useState(undefined)
   const columns = [
     {
       name: 'ID',
