@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 // Pages
 const Statistics = React.lazy(() => import('./views/pages/statistics/Statistics'))
 const Reloads = React.lazy(() => import('./views/pages/reloads/Reloads'))
