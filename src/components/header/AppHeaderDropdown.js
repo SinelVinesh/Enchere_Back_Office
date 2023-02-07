@@ -2,8 +2,6 @@ import React from 'react'
 import { CAvatar, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreui/react'
 import { cilAccountLogout } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-
-import avatar8 from './../../assets/images/avatars/8.jpg'
 import admin from './../../assets/images/avatars/admin.png'
 import { logout } from '../../database/Api'
 import withReactContent from 'sweetalert2-react-content'
